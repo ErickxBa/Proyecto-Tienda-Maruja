@@ -67,7 +67,6 @@ namespace CapaDatos
                 cn.Close();
             }
         }
-
         public List<E_Empleado> BuscarEmpleados(string criterio)
         {
             List<E_Empleado> empleados = new List<E_Empleado>();
@@ -76,12 +75,16 @@ namespace CapaDatos
             {
                 cn.Open();
 
-                // Uso de la vista vw_empleados para realizar la búsqueda en ambas tablas
-                string query = "SELECT Cedula, Nombres, Apellidos, SucursalId " +
-                               "FROM vw_empleados " +
-                               "WHERE Cedula = @Cedula ";
+                // Nueva consulta que une las dos tablas
+                string query = "SELECT emp_gye_cedula AS Cedula, emp_gye_nombres AS Nombres, emp_gye_apellidos AS Apellidos, emp_gye_sucursal_id AS SucursalId " +
+                               "FROM tb_emp_empleadoGuayaquil " +
+                               "WHERE emp_gye_cedula = @Cedula " +
+                               "UNION ALL " +
+                               "SELECT emp_qto_cedula AS Cedula, emp_qto_nombres AS Nombres, emp_qto_apellidos AS Apellidos, emp_qto_sucursal_id AS SucursalId " +
+                               "FROM [26.79.26.231].QuitoMaruja.dbo.tb_emp_empleadoQuito " +
+                               "WHERE emp_qto_cedula = @Cedula;";
                 SqlCommand cmd = new SqlCommand(query, cn);
-                cmd.Parameters.AddWithValue("@Cedula",  criterio );
+                cmd.Parameters.AddWithValue("@Cedula", criterio);
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -111,6 +114,7 @@ namespace CapaDatos
 
             return empleados;
         }
+
         public bool EditarEmpleado(E_Empleado empleado)
         {
             try
