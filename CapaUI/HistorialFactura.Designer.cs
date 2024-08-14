@@ -17,7 +17,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistorialFactura));
             this.dataGridViewFacturas = new System.Windows.Forms.DataGridView();
-            this.buttonVerDetalles = new System.Windows.Forms.Button();
             this.labelTitulo = new System.Windows.Forms.Label();
             this.dataGridViewDetalles = new System.Windows.Forms.DataGridView();
             this.labelDetallesFactura = new System.Windows.Forms.Label();
@@ -40,20 +39,6 @@
             this.dataGridViewFacturas.RowHeadersWidth = 51;
             this.dataGridViewFacturas.Size = new System.Drawing.Size(265, 311);
             this.dataGridViewFacturas.TabIndex = 0;
-            // 
-            // buttonVerDetalles
-            // 
-            this.buttonVerDetalles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
-            this.buttonVerDetalles.Font = new System.Drawing.Font("Britannic Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonVerDetalles.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.buttonVerDetalles.Location = new System.Drawing.Point(84, 540);
-            this.buttonVerDetalles.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonVerDetalles.Name = "buttonVerDetalles";
-            this.buttonVerDetalles.Size = new System.Drawing.Size(200, 49);
-            this.buttonVerDetalles.TabIndex = 1;
-            this.buttonVerDetalles.Text = "Ver Detalles";
-            this.buttonVerDetalles.UseVisualStyleBackColor = false;
-            this.buttonVerDetalles.Click += new System.EventHandler(this.buttonVerDetalles_Click_1);
             // 
             // labelTitulo
             // 
@@ -90,7 +75,7 @@
             // textBoxBuscar
             // 
             this.textBoxBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.textBoxBuscar.Location = new System.Drawing.Point(322, 145);
+            this.textBoxBuscar.Location = new System.Drawing.Point(352, 145);
             this.textBoxBuscar.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxBuscar.Name = "textBoxBuscar";
             this.textBoxBuscar.Size = new System.Drawing.Size(170, 30);
@@ -101,7 +86,7 @@
             this.buttonBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.buttonBuscar.Font = new System.Drawing.Font("Britannic Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonBuscar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.buttonBuscar.Location = new System.Drawing.Point(512, 143);
+            this.buttonBuscar.Location = new System.Drawing.Point(545, 143);
             this.buttonBuscar.Margin = new System.Windows.Forms.Padding(4);
             this.buttonBuscar.Name = "buttonBuscar";
             this.buttonBuscar.Size = new System.Drawing.Size(133, 37);
@@ -120,7 +105,6 @@
             this.labelBuscarPor.Size = new System.Drawing.Size(283, 22);
             this.labelBuscarPor.TabIndex = 9;
             this.labelBuscarPor.Text = "Buscar factura (Num Factura):";
-            this.labelBuscarPor.Click += new System.EventHandler(this.labelBuscarPor_Click);
             // 
             // btnRegresar
             // 
@@ -160,7 +144,6 @@
             this.Controls.Add(this.labelDetallesFactura);
             this.Controls.Add(this.dataGridViewDetalles);
             this.Controls.Add(this.labelTitulo);
-            this.Controls.Add(this.buttonVerDetalles);
             this.Controls.Add(this.dataGridViewFacturas);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -178,7 +161,6 @@
         }
 
         private System.Windows.Forms.DataGridView dataGridViewFacturas;
-        private System.Windows.Forms.Button buttonVerDetalles;
         private System.Windows.Forms.Label labelTitulo;
         private System.Windows.Forms.DataGridView dataGridViewDetalles;
         private System.Windows.Forms.Label labelDetallesFactura;

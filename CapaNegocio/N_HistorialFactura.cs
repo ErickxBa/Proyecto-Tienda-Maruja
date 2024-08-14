@@ -19,9 +19,9 @@ namespace CapaNegocio
             return historialDatos.ObtenerDetallesFactura(facturaID);
         }
 
-        public List<E_Factura> BuscarFacturas( string textoBusqueda)
+        public List<E_Factura> BuscarFacturas( int nroFact)
         {
-            return historialDatos.BuscarFacturas( textoBusqueda);
+            return historialDatos.BuscarFacturas( nroFact);
         }
     }
 }
