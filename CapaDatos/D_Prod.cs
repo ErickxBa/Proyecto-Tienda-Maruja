@@ -73,29 +73,50 @@ namespace CapaDatos
 
         public void D_Eliminar(int prodID)
         {
-            SqlCommand cmd = new SqlCommand("sp_eliminar_producto_Guayaquil", cn);
-            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                string query = "DELETE FROM tb_prod_producto WHERE prod_id = @prod_id";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cmd.Parameters.AddWithValue("@prod_id", prodID);
 
-            cmd.Parameters.AddWithValue("@prod_id", prodID);
-
-            cn.Open();
-            cmd.ExecuteNonQuery();
-            cn.Close();
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al eliminar el producto: " + ex.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
         }
+
 
         public void D_Editar(E_Prod producto)
         {
-            SqlCommand cmd = new SqlCommand("sp_editar_producto_Guayaquil", cn);
-            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                string query = "UPDATE tb_prod_producto SET prod_precio = @precio, prod_nombre = @nombre, prod_stock = @stock WHERE prod_id = @prod_id";
+                SqlCommand cmd = new SqlCommand(query, cn);
 
-            cmd.Parameters.AddWithValue("@prod_id", producto.id);
-            cmd.Parameters.AddWithValue("@precio", producto.precio);
-            cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
-            cmd.Parameters.AddWithValue("@stock", producto.stock);
+                cmd.Parameters.AddWithValue("@prod_id", producto.id);
+                cmd.Parameters.AddWithValue("@precio", producto.precio);
+                cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
+                cmd.Parameters.AddWithValue("@stock", producto.stock);
 
-            cn.Open();
-            cmd.ExecuteNonQuery();
-            cn.Close();
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al editar el producto: " + ex.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
         }
+
     }
 }

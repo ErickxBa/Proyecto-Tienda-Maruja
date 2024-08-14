@@ -49,7 +49,7 @@ namespace CapaDatos
                 int nuevoDetGyeId = ObtenerNuevoId(cn, transaction);
 
                 // Llamar al procedimiento almacenado para insertar la factura y obtener el nuevo número de factura
-                SqlCommand cmdFactura = new SqlCommand("sp_insert_vw_facturas", cn, transaction);
+                SqlCommand cmdFactura = new SqlCommand("sp_insertar_factura_Guayaquil", cn, transaction);
                 cmdFactura.CommandType = CommandType.StoredProcedure;
                 cmdFactura.Parameters.AddWithValue("@fac_total", factura.Total);
                 cmdFactura.Parameters.AddWithValue("@fac_sucursal_id", 2); // Sucursal Guayaquil

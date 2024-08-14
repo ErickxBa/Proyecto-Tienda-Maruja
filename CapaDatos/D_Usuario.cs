@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CapaEntidad;
 
 namespace CapaDatos
 {
-     public class D_Usuario
+    public class D_Usuario
     {
         private SqlConnection cn;
 
@@ -23,13 +19,30 @@ namespace CapaDatos
             try
             {
                 cn.Open();
-                string query = "SELECT COUNT(1) FROM tb_emp_empleadoGuayaquil WHERE emp_gye_nombres = @emp_gye_nombres AND emp_gye_cedula = @emp_gye_cedula  AND emp_gye_sucursal_id = 2" ;
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cmd.Parameters.AddWithValue("@emp_gye_nombres", usuario.Nombre);
-                cmd.Parameters.AddWithValue("@emp_gye_cedula", usuario.id);
 
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                return count == 1;
+                // Llamar al procedimiento almacenado para verificar las credenciales del empleado
+                string query = "sp_select_empleado";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                // Añadir parámetros al comando
+                cmd.Parameters.AddWithValue("@IdEmp", usuario.id);
+
+                // Ejecutar el comando y leer los resultados
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string nombreEmpleado = reader["Nombres"].ToString();
+
+                    // Verificar si el nombre coincide
+                    if (nombreEmpleado.Equals(usuario.Nombre, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
@@ -42,4 +55,3 @@ namespace CapaDatos
         }
     }
 }
-
