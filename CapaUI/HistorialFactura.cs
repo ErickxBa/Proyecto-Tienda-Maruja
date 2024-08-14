@@ -25,12 +25,19 @@ namespace CapaUI
             {
                 List<E_Factura> facturas = negocioHistorial.ObtenerHistorialFacturas();
                 dataGridViewFacturas.DataSource = facturas;
+
+                // Oculta la columna "SucursalID" si está presente en el DataGridView
+                if (dataGridViewFacturas.Columns["SucursalID"] != null)
+                {
+                    dataGridViewFacturas.Columns["SucursalID"].Visible = false;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar el historial de facturas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         // Evento para cargar los detalles de la factura seleccionada
         private void DataGridViewFacturas_SelectionChanged(object sender, EventArgs e)
@@ -42,6 +49,10 @@ namespace CapaUI
                     int facturaID = Convert.ToInt32(dataGridViewFacturas.SelectedRows[0].Cells["FacturaNum"].Value);
                     List<E_DetalleFactura> detalles = negocioHistorial.ObtenerDetallesFactura(facturaID);
                     dataGridViewDetalles.DataSource = detalles;
+                    if (dataGridViewDetalles.Columns["Sucursal"] != null)
+                    {
+                        dataGridViewDetalles.Columns["Sucursal"].Visible = false;
+                    }
                 }
                 catch (Exception ex)
                 {

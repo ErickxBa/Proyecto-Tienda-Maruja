@@ -118,13 +118,11 @@ namespace CapaUI
 
         private void btnRegresar_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("¿Está seguro de que desea regresar al menú principal?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
+            
                 this.Close();
                 Menu menu = new Menu();
                 menu.Show();
-            }
+            
         }
 
         private void dataGridViewClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)

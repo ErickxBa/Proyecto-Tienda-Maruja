@@ -162,11 +162,11 @@ namespace CapaDatos
                 // Usar el procedimiento almacenado para editar un empleado
                 SqlCommand cmd = new SqlCommand("sp_update_empleado", cn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
+                    
                 cmd.Parameters.AddWithValue("@IdEmp", empleado.Cedula);
                 cmd.Parameters.AddWithValue("@NomEmp", empleado.Nombres);
                 cmd.Parameters.AddWithValue("@ApeEmp", empleado.Apellidos);
-                cmd.Parameters.AddWithValue("@IdSuc", empleado.SucursalId);
+                cmd.Parameters.AddWithValue("@IdSuc", "002");
 
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;
