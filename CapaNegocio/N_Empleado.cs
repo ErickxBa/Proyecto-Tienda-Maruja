@@ -34,6 +34,10 @@ namespace CapaNegocio
             return empleadoDatos.EliminarEmpleado(cedula);
         }
 
+        public List<E_Empleado> ObtenerTodosLosEmpleados()
+        {
+            return empleadoDatos.ObtenerTodosLosEmpleados();
+        }
         public List<E_Empleado> BuscarEmpleados(string criterio)
         {
             return empleadoDatos.BuscarEmpleados(criterio);

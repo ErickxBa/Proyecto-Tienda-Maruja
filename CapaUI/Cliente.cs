@@ -48,7 +48,7 @@ namespace CapaUI
                             Nombre = textBoxNombreCliente.Text,
                             Direccion = textBoxDireccionCliente.Text,
                             Telefono = textBoxTelefonoCliente.Text,
-                            SucursalID = 2 // Asignando la sucursal de Guayaquil
+                            SucursalID = "002"// Asignando la sucursal de Guayaquil (asegúrate de que sea el ID correcto)
                         };
                         clienteNegocio.AgregarCliente(cliente);
                         MessageBox.Show("Cliente agregado exitosamente.");
@@ -102,7 +102,7 @@ namespace CapaUI
                             Nombre = textBoxNombreCliente.Text,
                             Direccion = textBoxDireccionCliente.Text,
                             Telefono = textBoxTelefonoCliente.Text,
-                            SucursalID = 2 // Asignando la sucursal de Guayaquil
+                            SucursalID = "002" // Asignando la sucursal de Guayaquil (asegúrate de que sea el ID correcto)
                         };
                         clienteNegocio.EditarCliente(cliente);
                         MessageBox.Show("Cliente editado exitosamente.");
@@ -129,7 +129,6 @@ namespace CapaUI
 
         private void dataGridViewClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Verificar que la celda seleccionada es válida
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridViewClientes.Rows[e.RowIndex];
@@ -139,5 +138,7 @@ namespace CapaUI
                 textBoxTelefonoCliente.Text = row.Cells["cli_telefono"].Value.ToString();
             }
         }
+
+       
     }
 }

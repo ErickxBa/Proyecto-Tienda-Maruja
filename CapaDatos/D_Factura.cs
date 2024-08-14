@@ -39,6 +39,23 @@ namespace CapaDatos
             return nuevoId;
         }
 
+        public int ObtenerNuevoNumeroFactura(SqlConnection cn, SqlTransaction transaction)
+        {
+            int nuevoNumeroFactura = 0;
+            string query = "SELECT ISNULL(MAX(fac_gye_num), 0) + 1 FROM tb_fac_facturaGuayaquil";
+
+            using (SqlCommand cmd = new SqlCommand(query, cn, transaction))
+            {
+                object resultado = cmd.ExecuteScalar();
+                if (resultado != null && resultado != DBNull.Value)
+                {
+                    nuevoNumeroFactura = Convert.ToInt32(resultado);
+                }
+            }
+
+            return nuevoNumeroFactura;
+        }
+
         public bool RegistrarFactura(E_Factura factura)
         {
             SqlTransaction transaction = null;
@@ -46,52 +63,38 @@ namespace CapaDatos
             {
                 cn.Open();
                 transaction = cn.BeginTransaction();
-                int nuevoDetGyeId = ObtenerNuevoId(cn, transaction);
 
-                // Llamar al procedimiento almacenado para insertar la factura y obtener el nuevo número de factura
-                SqlCommand cmdFactura = new SqlCommand("sp_insertar_factura_Guayaquil", cn, transaction);
-                cmdFactura.CommandType = CommandType.StoredProcedure;
-                cmdFactura.Parameters.AddWithValue("@fac_total", factura.Total);
-                cmdFactura.Parameters.AddWithValue("@fac_sucursal_id", 2); // Sucursal Guayaquil
-                cmdFactura.Parameters.AddWithValue("@fac_emp_cedula", factura.CedulaEmpleado);
-                cmdFactura.Parameters.AddWithValue("@fac_cli_id", factura.CedulaCliente);
+                // Obtener un nuevo número de factura
+                int nuevoNumeroFactura = ObtenerNuevoNumeroFactura(cn, transaction);
+                factura.FacturaNum = nuevoNumeroFactura;
 
-                SqlParameter outputParam = new SqlParameter("@new_fac_num", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                cmdFactura.Parameters.Add(outputParam);
+                // Insertar directamente en la tabla de facturas de Guayaquil
+                SqlCommand cmdFactura = new SqlCommand("INSERT INTO tb_fac_facturaGuayaquil (fac_gye_num, fac_gye_fecha, fac_gye_total, fac_gye_emp_cedula, fac_gye_cli_id, fac_gye_sucursal_id) " +
+                                                       "VALUES (@NumFac, GETDATE(), @Total, @IdEmp, @IdCli, @IdSuc)", cn, transaction);
+
+                cmdFactura.Parameters.AddWithValue("@NumFac", factura.FacturaNum);
+                cmdFactura.Parameters.AddWithValue("@Total", factura.Total);
+                cmdFactura.Parameters.AddWithValue("@IdEmp", factura.CedulaEmpleado);
+                cmdFactura.Parameters.AddWithValue("@IdCli", factura.CedulaCliente);
+                cmdFactura.Parameters.AddWithValue("@IdSuc", factura.SucursalID);
 
                 cmdFactura.ExecuteNonQuery();
 
-                // Obtener el número de factura generado
-                factura.FacturaNum = (int)outputParam.Value;
-
+                // Registrar detalles de la factura
                 foreach (var detalle in factura.Detalles)
                 {
-                    using (var cmdDetalle = new SqlCommand("sp_insert_vw_det_facturas", cn, transaction))
+                    using (var cmdDetalle = new SqlCommand("INSERT INTO tb_det_detalleGuayaquil (det_gye_id, det_gye_fac_num, det_gye_prod_id, det_gye_sucursal_id, det_gye_unidades, det_gye_precio_unitario) " +
+                                                           "VALUES (@DetId, @FacNum, @ProdId, @SucId, @Unidades, @PrecioUnitario)", cn, transaction))
                     {
-                        cmdDetalle.CommandType = CommandType.StoredProcedure;
+                        int nuevoDetGyeId = ObtenerNuevoId(cn, transaction); // Obtener nuevo ID para el detalle
+                        cmdDetalle.Parameters.AddWithValue("@DetId", nuevoDetGyeId);
+                        cmdDetalle.Parameters.AddWithValue("@FacNum", factura.FacturaNum);
+                        cmdDetalle.Parameters.AddWithValue("@ProdId", detalle.ProductoID);
+                        cmdDetalle.Parameters.AddWithValue("@SucId", factura.SucursalID);
+                        cmdDetalle.Parameters.AddWithValue("@Unidades", detalle.Cantidad);
+                        cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", detalle.PrecioUnitario);
 
-                        // Parámetros del procedimiento almacenado
-                        cmdDetalle.Parameters.AddWithValue("@det_fac_num", factura.FacturaNum);
-                        cmdDetalle.Parameters.AddWithValue("@det_prod_id", detalle.ProductoID);
-                        cmdDetalle.Parameters.AddWithValue("@det_sucursal_id", 2); // Sucursal Guayaquil
-                        cmdDetalle.Parameters.AddWithValue("@det_unidades", detalle.Cantidad);
-                        cmdDetalle.Parameters.AddWithValue("@det_precio_unitario", detalle.PrecioUnitario);
-
-                        // Parámetro de salida para el nuevo ID
-                        var newDetIdParam = new SqlParameter("@new_det_id", SqlDbType.Int)
-                        {
-                            Direction = ParameterDirection.Output
-                        };
-                        cmdDetalle.Parameters.Add(newDetIdParam);
-
-                        // Ejecutar el procedimiento almacenado
                         cmdDetalle.ExecuteNonQuery();
-
-                        // Obtener el nuevo ID generado
-                        int finDetGyeId = (int)newDetIdParam.Value;
                     }
                 }
 
@@ -107,16 +110,15 @@ namespace CapaDatos
             {
                 cn.Close();
             }
-
-
-
-
-
         }
+
+
+
+
         public List<E_Factura> ObtenerHistorialFacturas()
         {
             List<E_Factura> facturas = new List<E_Factura>();
-            string query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE fac_sucursal_id = 2";
+            string query = "SELECT fac_gye_num, fac_gye_fecha, fac_gye_total, fac_gye_emp_cedula, fac_gye_cli_id FROM v_factura WHERE fac_gye_sucursal_id = 2";
             SqlCommand cmd = new SqlCommand(query, cn);
 
             try
@@ -148,7 +150,7 @@ namespace CapaDatos
         public List<E_DetalleFactura> ObtenerDetallesFactura(int facturaID)
         {
             List<E_DetalleFactura> detalles = new List<E_DetalleFactura>();
-            string query = "SELECT det_gye_prod_id, det_gye_unidades, det_gye_precio_unitario FROM tb_det_detalleGuayaquil WHERE det_gye_fac_num = @FacturaNum";
+            string query = "SELECT det_gye_prod_id, det_gye_unidades, det_gye_precio_unitario FROM v_detalle WHERE det_gye_fac_num = @FacturaNum";
             SqlCommand cmd = new SqlCommand(query, cn);
             cmd.Parameters.AddWithValue("@FacturaNum", facturaID);
 
@@ -176,66 +178,6 @@ namespace CapaDatos
             return detalles;
         }
 
-        //public List<E_Factura> BuscarFacturas(string criterio, string textoBusqueda)
-        //{
-        //    List<E_Factura> facturas = new List<E_Factura>();
-        //    string query = "";
-
-        //    switch (criterio)
-        //    {
-        //        case "Número de Factura":
-        //            query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE fac_num LIKE @TextoBusqueda AND fac_sucursal_id = 2";
-        //            break;
-        //        case "ID del Cliente":
-        //            query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE fac_cli_id LIKE @TextoBusqueda AND fac_sucursal_id = 2";
-        //            break;
-        //        case "Cédula del Empleado":
-        //            query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE fac_emp_cedula LIKE @TextoBusqueda AND fac_sucursal_id = 2";
-        //            break;
-        //        case "Fecha de Factura":
-        //            query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE CONVERT(VARCHAR, fac_fecha, 103) LIKE @TextoBusqueda AND fac_sucursal_id = 2";
-        //            break;
-        //        case "Total de Factura":
-        //            query = "SELECT fac_num, fac_fecha, fac_total, fac_emp_cedula, fac_cli_id FROM vw_facturas WHERE fac_total LIKE @TextoBusqueda AND fac_sucursal_id = 2";
-        //            break;
-        //        default:
-        //            throw new ArgumentException("Criterio de búsqueda no válido.");
-        //    }
-
-        //    using (SqlCommand cmd = new SqlCommand(query, cn))
-        //    {
-        //        cmd.Parameters.AddWithValue("@TextoBusqueda", "%" + textoBusqueda + "%");
-
-        //        try
-        //        {
-        //            cn.Open();
-        //            using (SqlDataReader reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    E_Factura factura = new E_Factura
-        //                    {
-        //                        FacturaNum = reader.GetInt32(0),
-        //                        Fecha = reader.GetDateTime(1),
-        //                        Total = reader.GetDecimal(2),
-        //                        CedulaEmpleado = reader.GetString(3),
-        //                        CedulaCliente = reader.GetString(4)
-        //                    };
-        //                    facturas.Add(factura);
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Manejar excepción adecuadamente
-        //            throw new Exception("Error al buscar facturas: " + ex.Message);
-        //        }
-        //        finally
-        //        {
-        //            cn.Close();
-        //        }
-        //    }
-
-        //}
+        // Puedes agregar otros métodos para manejar la búsqueda de facturas o detalles específicos
     }
 }

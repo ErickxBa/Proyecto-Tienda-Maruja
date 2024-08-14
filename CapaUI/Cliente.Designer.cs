@@ -27,7 +27,6 @@
             this.labelTelefonoCliente = new System.Windows.Forms.Label();
             this.textBoxTelefonoCliente = new System.Windows.Forms.TextBox();
             this.buttonAgregar = new System.Windows.Forms.Button();
-            this.buttonEditar = new System.Windows.Forms.Button();
             this.btnEliminar = new System.Windows.Forms.Button();
             this.btnRegresar = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -44,7 +43,6 @@
             this.dataGridViewClientes.RowHeadersWidth = 51;
             this.dataGridViewClientes.Size = new System.Drawing.Size(340, 216);
             this.dataGridViewClientes.TabIndex = 0;
-           // this.dataGridViewClientes.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewClientes_CellContentClick);
             // 
             // labelTitulo
             // 
@@ -151,26 +149,12 @@
             this.buttonAgregar.UseVisualStyleBackColor = false;
             this.buttonAgregar.Click += new System.EventHandler(this.buttonAgregar_Click);
             // 
-            // buttonEditar
-            // 
-            this.buttonEditar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
-            this.buttonEditar.Font = new System.Drawing.Font("Britannic Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonEditar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.buttonEditar.Location = new System.Drawing.Point(233, 392);
-            this.buttonEditar.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonEditar.Name = "buttonEditar";
-            this.buttonEditar.Size = new System.Drawing.Size(154, 49);
-            this.buttonEditar.TabIndex = 11;
-            this.buttonEditar.Text = "Editar Cliente";
-            this.buttonEditar.UseVisualStyleBackColor = false;
-           // this.buttonEditar.Click += new System.EventHandler(this.buttonEditar_Click_1);
-            // 
             // btnEliminar
             // 
             this.btnEliminar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.btnEliminar.Font = new System.Drawing.Font("Britannic Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEliminar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnEliminar.Location = new System.Drawing.Point(424, 392);
+            this.btnEliminar.Location = new System.Drawing.Point(241, 392);
             this.btnEliminar.Margin = new System.Windows.Forms.Padding(4);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(177, 49);
@@ -212,7 +196,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnRegresar);
             this.Controls.Add(this.btnEliminar);
-            this.Controls.Add(this.buttonEditar);
             this.Controls.Add(this.buttonAgregar);
             this.Controls.Add(this.textBoxTelefonoCliente);
             this.Controls.Add(this.labelTelefonoCliente);
@@ -249,7 +232,6 @@
         private System.Windows.Forms.Label labelTelefonoCliente;
         private System.Windows.Forms.TextBox textBoxTelefonoCliente;
         private System.Windows.Forms.Button buttonAgregar;
-        private System.Windows.Forms.Button buttonEditar;
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Button btnRegresar;
         private System.Windows.Forms.PictureBox pictureBox1;

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using CapaDatos;
 using CapaEntidad;
 
@@ -6,26 +7,26 @@ namespace CapaNegocio
 {
     public class N_Cliente
     {
-        D_cliente datosCliente = new D_cliente();
+        D_cliente clienteDatos = new D_cliente();
 
         public DataTable ObtenerClientes()
         {
-            return datosCliente.ObtenerClientes();
+            return clienteDatos.D_Listado();
         }
 
         public void AgregarCliente(E_Cliente cliente)
         {
-            datosCliente.AgregarCliente(cliente);
+            clienteDatos.D_Insertar(cliente);
         }
 
         public void EditarCliente(E_Cliente cliente)
         {
-            datosCliente.EditarCliente(cliente);
+            clienteDatos.D_Editar(cliente);
         }
 
         public void EliminarCliente(string clienteID)
         {
-            datosCliente.EliminarCliente(clienteID);
+            clienteDatos.D_Eliminar(clienteID);
         }
     }
 }

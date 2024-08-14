@@ -11,7 +11,7 @@ namespace CapaEntidad
         public string Cedula { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
-        public int SucursalId { get; set; }
+        public string SucursalId { get; set; }
      
     }
 }

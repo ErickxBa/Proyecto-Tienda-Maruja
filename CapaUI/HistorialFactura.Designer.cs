@@ -23,7 +23,6 @@
             this.labelDetallesFactura = new System.Windows.Forms.Label();
             this.textBoxBuscar = new System.Windows.Forms.TextBox();
             this.buttonBuscar = new System.Windows.Forms.Button();
-            this.comboBoxBuscarPor = new System.Windows.Forms.ComboBox();
             this.labelBuscarPor = new System.Windows.Forms.Label();
             this.btnRegresar = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -54,6 +53,7 @@
             this.buttonVerDetalles.TabIndex = 1;
             this.buttonVerDetalles.Text = "Ver Detalles";
             this.buttonVerDetalles.UseVisualStyleBackColor = false;
+            this.buttonVerDetalles.Click += new System.EventHandler(this.buttonVerDetalles_Click_1);
             // 
             // labelTitulo
             // 
@@ -90,7 +90,7 @@
             // textBoxBuscar
             // 
             this.textBoxBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.textBoxBuscar.Location = new System.Drawing.Point(329, 143);
+            this.textBoxBuscar.Location = new System.Drawing.Point(322, 145);
             this.textBoxBuscar.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxBuscar.Name = "textBoxBuscar";
             this.textBoxBuscar.Size = new System.Drawing.Size(170, 30);
@@ -101,7 +101,7 @@
             this.buttonBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.buttonBuscar.Font = new System.Drawing.Font("Britannic Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonBuscar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.buttonBuscar.Location = new System.Drawing.Point(525, 145);
+            this.buttonBuscar.Location = new System.Drawing.Point(512, 143);
             this.buttonBuscar.Margin = new System.Windows.Forms.Padding(4);
             this.buttonBuscar.Name = "buttonBuscar";
             this.buttonBuscar.Size = new System.Drawing.Size(133, 37);
@@ -110,23 +110,6 @@
             this.buttonBuscar.UseVisualStyleBackColor = false;
             this.buttonBuscar.Click += new System.EventHandler(this.buttonBuscar_Click);
             // 
-            // comboBoxBuscarPor
-            // 
-            this.comboBoxBuscarPor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBuscarPor.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.comboBoxBuscarPor.FormattingEnabled = true;
-            this.comboBoxBuscarPor.Items.AddRange(new object[] {
-            "Número de Factura",
-            "ID del Cliente",
-            "Cédula del Empleado",
-            "Fecha de Factura",
-            "Total de Factura"});
-            this.comboBoxBuscarPor.Location = new System.Drawing.Point(156, 143);
-            this.comboBoxBuscarPor.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBoxBuscarPor.Name = "comboBoxBuscarPor";
-            this.comboBoxBuscarPor.Size = new System.Drawing.Size(145, 33);
-            this.comboBoxBuscarPor.TabIndex = 8;
-            // 
             // labelBuscarPor
             // 
             this.labelBuscarPor.AutoSize = true;
@@ -134,9 +117,10 @@
             this.labelBuscarPor.Location = new System.Drawing.Point(31, 148);
             this.labelBuscarPor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelBuscarPor.Name = "labelBuscarPor";
-            this.labelBuscarPor.Size = new System.Drawing.Size(117, 22);
+            this.labelBuscarPor.Size = new System.Drawing.Size(283, 22);
             this.labelBuscarPor.TabIndex = 9;
-            this.labelBuscarPor.Text = "Buscar por:";
+            this.labelBuscarPor.Text = "Buscar factura (Num Factura):";
+            this.labelBuscarPor.Click += new System.EventHandler(this.labelBuscarPor_Click);
             // 
             // btnRegresar
             // 
@@ -171,7 +155,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnRegresar);
             this.Controls.Add(this.labelBuscarPor);
-            this.Controls.Add(this.comboBoxBuscarPor);
             this.Controls.Add(this.buttonBuscar);
             this.Controls.Add(this.textBoxBuscar);
             this.Controls.Add(this.labelDetallesFactura);
@@ -201,7 +184,6 @@
         private System.Windows.Forms.Label labelDetallesFactura;
         private System.Windows.Forms.TextBox textBoxBuscar;
         private System.Windows.Forms.Button buttonBuscar;
-        private System.Windows.Forms.ComboBox comboBoxBuscarPor;
         private System.Windows.Forms.Label labelBuscarPor;
         private System.Windows.Forms.Button btnRegresar;
         private System.Windows.Forms.PictureBox pictureBox1;

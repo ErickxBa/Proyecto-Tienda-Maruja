@@ -21,15 +21,14 @@ namespace CapaDatos
             {
                 cn.Open();
 
-                // Inserción directa en la tabla de Guayaquil ya que la vista se utiliza solo para consultas
-                string query = "INSERT INTO tb_emp_empleadoGuayaquil (emp_gye_nombres, emp_gye_apellidos, emp_gye_cedula, emp_gye_sucursal_id) " +
-                               "VALUES (@emp_gye_nombres, @emp_gye_apellidos, @emp_gye_cedula, @emp_gye_sucursal_id)";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                // Usar el procedimiento almacenado para insertar un empleado
+                SqlCommand cmd = new SqlCommand("sp_insert_empleado", cn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@emp_gye_nombres", empleado.Nombres);
-                cmd.Parameters.AddWithValue("@emp_gye_apellidos", empleado.Apellidos);
-                cmd.Parameters.AddWithValue("@emp_gye_cedula", empleado.Cedula);
-                cmd.Parameters.AddWithValue("@emp_gye_sucursal_id", empleado.SucursalId);
+                cmd.Parameters.AddWithValue("@IdEmp", empleado.Cedula);
+                cmd.Parameters.AddWithValue("@NomEmp", empleado.Nombres);
+                cmd.Parameters.AddWithValue("@ApeEmp", empleado.Apellidos);
+                cmd.Parameters.AddWithValue("@IdSuc", empleado.SucursalId);  // Cambiado para utilizar el SucursalId del empleado
 
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;
@@ -50,10 +49,10 @@ namespace CapaDatos
             {
                 cn.Open();
 
-                // Eliminación directa en la tabla de Guayaquil, la vista se usa solo para consultas
-                string query = "DELETE FROM tb_emp_empleadoGuayaquil WHERE emp_gye_cedula = @Cedula";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cmd.Parameters.AddWithValue("@Cedula", cedula + "%");
+                // Usar el procedimiento almacenado para eliminar un empleado
+                SqlCommand cmd = new SqlCommand("sp_delete_empleado", cn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdEmp", cedula);
 
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;
@@ -67,6 +66,7 @@ namespace CapaDatos
                 cn.Close();
             }
         }
+
         public List<E_Empleado> BuscarEmpleados(string criterio)
         {
             List<E_Empleado> empleados = new List<E_Empleado>();
@@ -75,14 +75,10 @@ namespace CapaDatos
             {
                 cn.Open();
 
-                // Nueva consulta que une las dos tablas
+                // Consulta para buscar empleados utilizando la vista
                 string query = "SELECT emp_gye_cedula AS Cedula, emp_gye_nombres AS Nombres, emp_gye_apellidos AS Apellidos, emp_gye_sucursal_id AS SucursalId " +
-                               "FROM tb_emp_empleadoGuayaquil " +
-                               "WHERE emp_gye_cedula = @Cedula " +
-                               "UNION ALL " +
-                               "SELECT emp_qto_cedula AS Cedula, emp_qto_nombres AS Nombres, emp_qto_apellidos AS Apellidos, emp_qto_sucursal_id AS SucursalId " +
-                               "FROM [26.79.26.231].QuitoMaruja.dbo.tb_emp_empleadoQuito " +
-                               "WHERE emp_qto_cedula = @Cedula;";
+                               "FROM v_empleado " +
+                               "WHERE emp_gye_cedula LIKE @Cedula + '%'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cmd.Parameters.AddWithValue("@Cedula", criterio);
 
@@ -95,7 +91,7 @@ namespace CapaDatos
                         Cedula = reader["Cedula"].ToString(),
                         Nombres = reader["Nombres"].ToString(),
                         Apellidos = reader["Apellidos"].ToString(),
-                        SucursalId = Convert.ToInt32(reader["SucursalId"])
+                        SucursalId = reader["SucursalId"].ToString()
                     };
 
                     empleados.Add(empleado);
@@ -115,22 +111,62 @@ namespace CapaDatos
             return empleados;
         }
 
+        public List<E_Empleado> ObtenerTodosLosEmpleados()
+        {
+            List<E_Empleado> empleados = new List<E_Empleado>();
+
+            try
+            {
+                cn.Open();
+
+                // Consulta para obtener todos los empleados desde la vista
+                string query = "SELECT emp_gye_cedula AS Cedula, emp_gye_nombres AS Nombres, emp_gye_apellidos AS Apellidos, emp_gye_sucursal_id AS SucursalId " +
+                               "FROM v_empleado";
+                SqlCommand cmd = new SqlCommand(query, cn);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    E_Empleado empleado = new E_Empleado
+                    {
+                        Cedula = reader["Cedula"].ToString(),
+                        Nombres = reader["Nombres"].ToString(),
+                        Apellidos = reader["Apellidos"].ToString(),
+                        SucursalId = reader["SucursalId"].ToString()
+                    };
+
+                    empleados.Add(empleado);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los empleados: " + ex.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
+
+            return empleados;
+        }
+
         public bool EditarEmpleado(E_Empleado empleado)
         {
             try
             {
                 cn.Open();
 
-                string query = "UPDATE tb_emp_empleadoGuayaquil SET emp_gye_nombres = @emp_gye_nombres, " +
-                               "emp_gye_apellidos = @emp_gye_apellidos, " +
-                               "emp_gye_sucursal_id = @emp_gye_sucursal_id " +
-                               "WHERE emp_gye_cedula = @emp_gye_cedula";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                // Usar el procedimiento almacenado para editar un empleado
+                SqlCommand cmd = new SqlCommand("sp_update_empleado", cn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@emp_gye_nombres", empleado.Nombres);
-                cmd.Parameters.AddWithValue("@emp_gye_apellidos", empleado.Apellidos);
-                cmd.Parameters.AddWithValue("@emp_gye_sucursal_id", empleado.SucursalId);
-                cmd.Parameters.AddWithValue("@emp_gye_cedula", empleado.Cedula);
+                cmd.Parameters.AddWithValue("@IdEmp", empleado.Cedula);
+                cmd.Parameters.AddWithValue("@NomEmp", empleado.Nombres);
+                cmd.Parameters.AddWithValue("@ApeEmp", empleado.Apellidos);
+                cmd.Parameters.AddWithValue("@IdSuc", empleado.SucursalId);
 
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;

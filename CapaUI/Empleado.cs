@@ -3,6 +3,7 @@ using CapaNegocio;
 using System.Windows.Forms;
 using System;
 using System.Collections.Generic;
+using CapaDatos;
 
 namespace CapaUI
 {
@@ -13,7 +14,7 @@ namespace CapaUI
         public Empleado()
         {
             InitializeComponent();
-            CargarEmpleados();
+            CargarTodosLosEmpleados();
         }
 
         private void btnRegresar_Click(object sender, EventArgs e)
@@ -28,7 +29,7 @@ namespace CapaUI
             E_Empleado empleado = new E_Empleado
             {
                 Cedula = textBoxCedula.Text,
-                SucursalId = 2,
+                SucursalId = "002",
                 Nombres = textBoxNombres.Text,
                 Apellidos = textBoxApellidos.Text,
             };
@@ -69,9 +70,9 @@ namespace CapaUI
                 MessageBox.Show("Error al eliminar el empleado.");
             }
         }
-        private void CargarEmpleados()
+        private void CargarTodosLosEmpleados()
         {
-            List<E_Empleado> empleados = empleadoNegocio.BuscarEmpleados("");
+            List<E_Empleado> empleados = empleadoNegocio.ObtenerTodosLosEmpleados();
             dataGridViewEmpleados.DataSource = empleados;
         }
         private void buttonEditar_Click(object sender, EventArgs e)
@@ -81,14 +82,14 @@ namespace CapaUI
                 Cedula = textBoxCedula.Text,
                 Nombres = textBoxNombres.Text,
                 Apellidos = textBoxApellidos.Text,
-                SucursalId = 2 // Asignando la sucursal de Guayaquil
+                SucursalId = "002" // Asignando la sucursal de Guayaquil
             };
             bool success = empleadoNegocio.EditarEmpleado(empleado);
 
             if (success)
             {
                 MessageBox.Show("Empleado editado exitosamente.");
-                CargarEmpleados();
+                CargarTodosLosEmpleados();
             }
             else
             {

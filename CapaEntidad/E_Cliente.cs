@@ -6,6 +6,6 @@
         public string Nombre { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
-        public int SucursalID { get; set; }
+        public string SucursalID { get; set; }
     }
 }

@@ -66,7 +66,8 @@ namespace CapaUI
                 CedulaEmpleado = textBoxCedulaEmpleado.Text,
                 Fecha = DateTime.Now,
                 Detalles = detallesFactura,
-                Total = detallesFactura.Sum(d => d.Subtotal)
+                Total = detallesFactura.Sum(d => d.Subtotal),
+                SucursalID = "002" // Asignando la sucursal de Guayaquil (asegúrate de que sea el ID correcto)
             };
 
             N_Factura facturaNegocio = new N_Factura();

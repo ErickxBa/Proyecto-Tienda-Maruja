@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
-using CapaEntidad;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
+using CapaEntidad;
 
 namespace CapaDatos
 {
@@ -16,26 +12,25 @@ namespace CapaDatos
 
         public DataTable D_listado()
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM vw_productos_unificados", cn);
-            cmd.CommandType = CommandType.Text;
+            SqlCommand cmd = new SqlCommand("sp_select_productos", cn); // Reemplazamos por un procedimiento almacenado
+            cmd.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             return dt;
         }
 
-
         public void D_Insertar(E_Prod producto)
         {
-            SqlCommand cmd = new SqlCommand("sp_insertar_actualizar_producto_Guayaquil", cn);
+            SqlCommand cmd = new SqlCommand("sp_insert_producto", cn); // Procedimiento almacenado para insertar producto
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@prod_id", producto.id);
-            cmd.Parameters.AddWithValue("@prod_precio", producto.precio);
-            cmd.Parameters.AddWithValue("@prod_nombre", producto.Nombre);
-            cmd.Parameters.AddWithValue("@prod_stock", producto.stock);
-            cmd.Parameters.AddWithValue("@sucursal_id", 2); // Sucursal Guayaquil
-     
+            cmd.Parameters.AddWithValue("@IdProd", producto.id);
+            cmd.Parameters.AddWithValue("@NomProd", producto.Nombre);
+            cmd.Parameters.AddWithValue("@PrecioProd", producto.precio);
+            cmd.Parameters.AddWithValue("@Stock", producto.stock);
+       
+
             cn.Open();
             cmd.ExecuteNonQuery();
             cn.Close();
@@ -46,7 +41,7 @@ namespace CapaDatos
             try
             {
                 cn.Open();
-                string query = "SELECT prod_precio FROM tb_prod_producto WHERE prod_id = @ProductoID";
+                string query = "SELECT prod_precio FROM tb_prod_producto WHERE prod_id = @ProductoID"; // Este código permanece igual
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cmd.Parameters.AddWithValue("@ProductoID", productoID);
 
@@ -75,9 +70,9 @@ namespace CapaDatos
         {
             try
             {
-                string query = "DELETE FROM tb_prod_producto WHERE prod_id = @prod_id";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cmd.Parameters.AddWithValue("@prod_id", prodID);
+                SqlCommand cmd = new SqlCommand("sp_delete_producto", cn); // Procedimiento almacenado para eliminar producto
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdProd", prodID);
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
@@ -92,18 +87,17 @@ namespace CapaDatos
             }
         }
 
-
         public void D_Editar(E_Prod producto)
         {
             try
             {
-                string query = "UPDATE tb_prod_producto SET prod_precio = @precio, prod_nombre = @nombre, prod_stock = @stock WHERE prod_id = @prod_id";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                SqlCommand cmd = new SqlCommand("sp_update_producto", cn); // Procedimiento almacenado para actualizar producto
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@prod_id", producto.id);
-                cmd.Parameters.AddWithValue("@precio", producto.precio);
-                cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
-                cmd.Parameters.AddWithValue("@stock", producto.stock);
+                cmd.Parameters.AddWithValue("@IdProd", producto.id);
+                cmd.Parameters.AddWithValue("@NomProd", producto.Nombre);
+                cmd.Parameters.AddWithValue("@PrecioProd", producto.precio);
+                cmd.Parameters.AddWithValue("@Stock", producto.stock);
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
@@ -117,6 +111,5 @@ namespace CapaDatos
                 cn.Close();
             }
         }
-
     }
 }
