@@ -14,47 +14,13 @@ namespace CapaUI
     {
         public Menu()
         {
+            //La base de datos va a ser sql server, la conexion a la bdd está en el archivo app.config para ser mas eficientes.
             InitializeComponent();
         }
 
-        private void btnSalir_Click(object sender, EventArgs e)
+        private void Menu_Load(object sender, EventArgs e)
         {
-            Application.Exit();
-        }
 
-        private void buttonInventario_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Inventario inventario = new Inventario();
-            inventario.Show();
-        }
-
-        private void buttonClientes_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Cliente cliente = new Cliente();
-            cliente.Show();
-        }
-
-        private void buttonEmpleados_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Empleado empleado = new Empleado();
-            empleado.Show();
-        }
-
-        private void buttonNuevaFactura_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Factura factura = new Factura();
-            factura.Show();
-        }
-
-        private void buttonHistorialFacturas_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            HistorialFactura historialFacturas = new HistorialFactura();
-            historialFacturas.Show();
         }
     }
 }

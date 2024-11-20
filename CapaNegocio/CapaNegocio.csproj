@@ -41,22 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="N_Cliente.cs" />
-    <Compile Include="N_Empleado.cs" />
-    <Compile Include="N_Factura.cs" />
-    <Compile Include="N_HistorialFactura.cs" />
-    <Compile Include="N_Prod.cs" />
-    <Compile Include="N_Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CapaDatos\CapaDatos.csproj">
       <Project>{461c2198-735d-40c2-b975-075bc9ea50da}</Project>
       <Name>CapaDatos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CapaEntidad\CapaEntidad.csproj">
-      <Project>{c99c57f6-7a12-4666-9ead-670b6691634d}</Project>
-      <Name>CapaEntidad</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
